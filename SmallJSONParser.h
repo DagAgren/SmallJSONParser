@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 #define StringObjectJSONToken 1
@@ -23,20 +24,20 @@
 
 typedef struct JSONParser
 {
-	const char *currentbyte,*end;
+	const uint8_t *currentbyte,*end;
 	int state,partialtokentype;
 } JSONParser;
 
 typedef struct JSONToken
 {
 	unsigned int typeandflags;
-	const char *start,*end;
+	const uint8_t *start,*end;
 } JSONToken;
 
 // Minimal API.
 
 void InitialiseJSONParser(JSONParser *self);
-void ProvideJSONInput(JSONParser *self,const char *bytes,size_t length);
+void ProvideJSONInput(JSONParser *self,const void *bytes,size_t length);
 JSONToken NextJSONToken(JSONParser *self);
 
 static inline int JSONTokenType(JSONToken token) { return token.typeandflags&~JSONTokenFlagMask; }
@@ -49,12 +50,12 @@ typedef bool JSONInputProviderCallbackFunction(JSONParser *parser,void *context)
 typedef struct JSONProvider {
 	JSONInputProviderCallbackFunction *callback;
 	void *context;
-	char *buffer;
+	uint8_t *buffer;
 	size_t buffersize;
 } JSONProvider;
 
 static inline void InitialiseJSONProvider(JSONProvider *self,
-JSONInputProviderCallbackFunction *callback,void *context,char *buffer,size_t buffersize)
+JSONInputProviderCallbackFunction *callback,void *context,void *buffer,size_t buffersize)
 {
 	self->callback=callback;
 	self->context=context;
@@ -68,10 +69,11 @@ static inline bool IsJSONTokenTruncated(JSONToken token) { return token.typeandf
 
 // Token parsing functions.
 
-int UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize);
+bool UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end);
 bool UnescapeStringTokenInPlace(JSONToken *token);
 bool ParseNumberTokenAsInteger(JSONToken token,int *result);
 bool ParseNumberTokenAsFloat(JSONToken token,float *result);
+bool ParseNumberTokenAsDouble(JSONToken token,double *result);
 
 // Structure parsing functions.
 

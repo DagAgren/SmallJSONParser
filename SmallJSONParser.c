@@ -8,10 +8,10 @@ void InitialiseJSONParser(JSONParser *self)
 	self->partialtokentype=OutOfDataJSONToken;
 }
 
-void ProvideJSONInput(JSONParser *self,const char *bytes,size_t length)
+void ProvideJSONInput(JSONParser *self,const void *bytes,size_t length)
 {
 	self->currentbyte=bytes;
-	self->end=bytes+length;
+	self->end=self->currentbyte+length;
 }
 
 #define BaseState 0
@@ -31,7 +31,7 @@ JSONToken NextJSONToken(JSONParser *self)
 
 	while(self->currentbyte<self->end)
 	{
-		unsigned char c=*self->currentbyte++;
+		uint8_t c=*self->currentbyte++;
 		switch(self->state)
 		{
 			case BaseState:
@@ -208,6 +208,136 @@ JSONToken NextJSONTokenWithProvider(JSONParser *self,JSONProvider *provider)
 		.start=&provider->buffer[0],
 		.end=&provider->buffer[bufferposition],
 	};
+}
+
+
+
+
+static int HexDigit(uint8_t c)
+{
+	if(c>='0' && c<='9') return c-'0';
+	else if(c>='a' && c<='z') return c-'a'+10;
+	else if(c>='A' && c<='Z') return c-'A'+10;
+	else return -1;
+}
+
+bool UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end)
+{
+	const uint8_t *src=token.start;
+	char *dest=unescapedbuffer;
+
+	while(src<token.end)
+	{
+		uint8_t c=*src++;
+		if(c=='\\')
+		{
+			if(src==token.end) return false;
+
+			uint8_t c=*src++;
+			switch(c)
+			{
+				case '"': case '\\': case '/': *dest++=c; break;
+				case 'b': *dest++='\b'; break;
+				case 'f': *dest++='\f'; break;
+				case 'n': *dest++='\n'; break;
+				case 'r': *dest++='\r'; break;
+				case 't': *dest++='\t'; break;
+				case 'u':
+					if(src+4>token.end) return false;
+					int h0=HexDigit(*src++);
+					int h1=HexDigit(*src++);
+					int h2=HexDigit(*src++);
+					int h3=HexDigit(*src++);
+					if(h0<0 || h1<0 || h2<0 || h3<0) return false;
+
+					int code=(h0<<12)|(h1<<8)|(h2<<4)|h3;
+
+					if(code<128)
+					{
+						*dest++=code;
+					}
+					else if(code<2048)
+					{
+						*dest++=0xc0|(code>>6);
+						*dest++=0x80|(code&0x3f);
+					}
+					else
+					{
+						*dest++=0xe0|(code>>12);
+						*dest++=0x80|((code>>6)&0x3f);
+						*dest++=0x80|(code&0x3f);
+					}
+				break;
+			}
+		}
+		else
+		{
+			*dest=c;
+		}
+	}
+
+	*dest=0;
+
+	return true;
+}
+
+bool UnescapeStringTokenInPlace(JSONToken *token)
+{
+	return UnescapeStringToken(*token,(char *)token->start,token->end-token->start,(char **)&token->end);
+}
+
+bool ParseNumberTokenAsInteger(JSONToken token,int *result)
+{
+	int value=0;
+	bool negative=false;
+	const uint8_t *ptr=token.start;
+
+	if(ptr==token.end) return false;
+
+	if(*ptr=='-')
+	{
+		negative=true;
+		ptr++;
+		if(ptr==token.end) return false;
+	}
+
+	while(ptr<token.end)
+	{
+		uint8_t c=*ptr++;
+		if(c<'0' || c>'9') return false;
+		value=value*10+c-'0';
+	}
+
+	if(negative) *result=-value;
+	else *result=value;
+
+	return true;
+}
+
+bool ParseNumberTokenAsFloat(JSONToken token,float *result)
+{
+	size_t length=token.end-token.start;
+	char buffer[length+1];
+	memcpy(buffer,token.start,length);
+	buffer[length]=0;
+
+	char *end;
+	*result=strtof(buffer,&end);
+
+	return end!=(const char *)token.start;
+}
+
+bool ParseNumberTokenAsDouble(JSONToken token,double *result)
+{
+	size_t length=token.end-token.start;
+	char buffer[length+1];
+	memcpy(buffer,token.start,length);
+	buffer[length]=0;
+
+	char *end;
+	*result=strtod(buffer,&end);
+
+	return end!=(const char *)token.start;
 }
 
 

@@ -43,7 +43,7 @@ int main()
 		JSONToken token=NextJSONToken(&parser);
 
 		printf("%s: ",tokennames[JSONTokenType(token)]);
-		for(const char *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
+		for(const uint8_t *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
 		printf("\n");
 
 		if(JSONTokenType(token)==OutOfDataJSONToken || JSONTokenType(token)==ParseErrorJSONToken) break;
@@ -64,7 +64,7 @@ int main()
 		JSONToken token=NextJSONTokenWithProvider(&parser,&annoyingprovider);
 
 		printf("%s: ",tokennames[JSONTokenType(token)]);
-		for(const char *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
+		for(const uint8_t *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
 		printf("\n");
 
 		if(JSONTokenType(token)==OutOfDataJSONToken || JSONTokenType(token)==ParseErrorJSONToken) break;
@@ -92,6 +92,23 @@ int main()
 				if(ExpectJSONTokenOfTypeWithProvider(&parser,&annoyingprovider,NumberObjectJSONToken,&token))
 				{
 					printf("Found expected number.\n");
+
+					int value;
+					if(ParseNumberTokenAsInteger(token,&value))
+					{
+						if(value==2)
+						{
+							printf("Parsed value as correct integer %d.\n",value);
+						}
+						else
+						{
+							printf("Parsed value as incorrect integer %d.\n",value);
+						}
+					}
+					else
+					{
+						printf("Failed to parse number as integer.\n");
+					}
 				}
 				else
 				{
