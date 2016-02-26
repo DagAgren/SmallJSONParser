@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define StringObjectJSONToken 1
-#define NumberObjectJSONToken 2
+#define StringJSONToken 1
+#define NumberJSONToken 2
 #define StartObjectJSONToken 3
 #define EndObjectJSONToken 4
 #define StartArrayJSONToken 5
@@ -69,8 +69,10 @@ static inline bool IsJSONTokenTruncated(JSONToken token) { return token.typeandf
 
 // Token parsing functions.
 
-bool UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end);
+bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end);
 bool UnescapeStringTokenInPlace(JSONToken *token);
+bool FastIsJSONStringEqual(JSONToken token,const char *string);
+bool FastIsJSONStringEqualWithLength(JSONToken token,const char *string,size_t length);
 bool ParseNumberTokenAsInteger(JSONToken token,int *result);
 bool ParseNumberTokenAsFloat(JSONToken token,float *result);
 bool ParseNumberTokenAsDouble(JSONToken token,double *result);
@@ -82,13 +84,15 @@ bool SkipJSONValueWithProvider(JSONParser *self,JSONProvider *provider);
 bool ExpectAndSkipJSONValueOfTypeWithProvider(JSONParser *self,JSONProvider *provider,int expectedtype);
 bool SkipUntilEndOfJSONObjectWithProvider(JSONParser *self,JSONProvider *provider);
 bool SkipUntilEndOfJSONArrayWithProvider(JSONParser *self,JSONProvider *provider);
-bool ExpectAndScanJSONObjectForKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key);
+bool SkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key);
+bool ExpectAndSkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key);
 
 static inline bool ExpectJSONTokenOfType(JSONParser *self,int expectedtype,JSONToken *token) { return ExpectJSONTokenOfTypeWithProvider(self,NULL,expectedtype,token); }
 static inline bool SkipJSONValue(JSONParser *self) { return SkipJSONValueWithProvider(self,NULL); }
 static inline bool ExpectAndSkipJSONValueOfType(JSONParser *self,int expectedtype) { return ExpectAndSkipJSONValueOfTypeWithProvider(self,NULL,expectedtype); }
 static inline bool SkipUntilEndOfJSONObject(JSONParser *self) { return SkipUntilEndOfJSONObjectWithProvider(self,NULL); }
 static inline bool SkipUntilEndOfJSONArray(JSONParser *self) { return SkipUntilEndOfJSONArrayWithProvider(self,NULL); }
-static inline bool ExpectAndScanJSONObjectForKey(JSONParser *self,const char *key) { return ExpectAndScanJSONObjectForKeyWithProvider(self,NULL,key); }
+static inline bool SkipUntilJSONObjectKey(JSONParser *self,const char *key) { return SkipUntilJSONObjectKeyWithProvider(self,NULL,key); }
+static inline bool ExpectAndSkipUntilJSONObjectKey(JSONParser *self,const char *key) { return ExpectAndSkipUntilJSONObjectKeyWithProvider(self,NULL,key); }
 
 #endif

@@ -23,8 +23,8 @@ int main()
 
 	static const char *tokennames[]=
 	{
-		[StringObjectJSONToken]="String",
-		[NumberObjectJSONToken]="Number",
+		[StringJSONToken]="String",
+		[NumberJSONToken]="Number",
 		[StartObjectJSONToken]="Start object",
 		[EndObjectJSONToken]="End object",
 		[StartArrayJSONToken]="Start array",
@@ -77,7 +77,7 @@ int main()
 	InitialiseJSONProvider(&annoyingprovider,AnnoyingInputProvider,&input,buffer,sizeof(buffer));
 
 	JSONToken token;
-	if(ExpectAndScanJSONObjectForKeyWithProvider(&parser,&annoyingprovider,"furtherkey"))
+	if(ExpectAndSkipUntilJSONObjectKeyWithProvider(&parser,&annoyingprovider,"furtherkey"))
 	{
 		printf("Found key.\n");
 
@@ -89,7 +89,7 @@ int main()
 			{
 				printf("Skipped value.\n");
 
-				if(ExpectJSONTokenOfTypeWithProvider(&parser,&annoyingprovider,NumberObjectJSONToken,&token))
+				if(ExpectJSONTokenOfTypeWithProvider(&parser,&annoyingprovider,NumberJSONToken,&token))
 				{
 					printf("Found expected number.\n");
 

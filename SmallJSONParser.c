@@ -41,7 +41,7 @@ JSONToken NextJSONToken(JSONParser *self)
 						break;
 
 					case '"':
-						token.typeandflags=StringObjectJSONToken;
+						token.typeandflags=StringJSONToken;
 						token.start=self->currentbyte;
 						self->state=StringState;
 						break;
@@ -76,7 +76,7 @@ JSONToken NextJSONToken(JSONParser *self)
 					case '-':
 					case '0': case '1': case '2': case '3': case '4':
 					case '5': case '6': case '7': case '8': case '9':
-						token.typeandflags=NumberObjectJSONToken;
+						token.typeandflags=NumberJSONToken;
 						token.start=self->currentbyte-1;
 						self->state=BareSymbolState;
 						break;
@@ -221,7 +221,7 @@ static int HexDigit(uint8_t c)
 	else return -1;
 }
 
-bool UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end)
+bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end)
 {
 	const uint8_t *src=token.start;
 	char *dest=unescapedbuffer;
@@ -281,9 +281,21 @@ bool UnescapeStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize
 	return true;
 }
 
-bool UnescapeStringTokenInPlace(JSONToken *token)
+bool UnescapeJSONStringTokenInPlace(JSONToken *token)
 {
-	return UnescapeStringToken(*token,(char *)token->start,token->end-token->start,(char **)&token->end);
+	return UnescapeJSONStringToken(*token,(char *)token->start,token->end-token->start,(char **)&token->end);
+}
+
+bool FastIsJSONStringEqual(JSONToken token,const char *string)
+{
+	return FastIsJSONStringEqualWithLength(token,string,strlen(string));
+}
+
+bool FastIsJSONStringEqualWithLength(JSONToken token,const char *string,size_t length)
+{
+	size_t testlength=token.end-token.start;
+	if(testlength!=length) return false;
+	return memcmp(token.start,string,testlength)==0;
 }
 
 bool ParseNumberTokenAsInteger(JSONToken token,int *result)
@@ -380,22 +392,26 @@ bool SkipUntilEndOfJSONArrayWithProvider(JSONParser *self,JSONProvider *provider
 	return ParseBraces(self,provider,1);
 }
 
-bool ExpectAndScanJSONObjectForKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key)
+bool SkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key)
+{
+	size_t keylength=strlen(key);
+	for(;;)
+	{
+		JSONToken token;
+		if(!ExpectJSONTokenOfTypeWithProvider(self,provider,StringJSONToken,&token)) return false;
+
+		if(FastIsJSONStringEqualWithLength(token,key,keylength)) return true;
+
+		if(!SkipJSONValueWithProvider(self,provider)) return false;
+	}
+}
+
+bool ExpectAndSkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key)
 {
 	JSONToken token;
 	if(!ExpectJSONTokenOfTypeWithProvider(self,provider,StartObjectJSONToken,&token)) return false;
 
-	size_t keylength=strlen(key);
-	for(;;)
-	{
-		if(!ExpectJSONTokenOfTypeWithProvider(self,provider,StringObjectJSONToken,&token)) return false;
-
-		size_t testlength=token.end-token.start;
-		if(testlength>keylength) testlength=keylength;
-		if(memcmp(token.start,key,testlength)==0) return true;
-
-		if(!SkipJSONValueWithProvider(self,provider)) return false;
-	}
+	return SkipUntilJSONObjectKeyWithProvider(self,provider,key);
 }
 
 static bool ParseBraces(JSONParser *self,JSONProvider *provider,int level)
