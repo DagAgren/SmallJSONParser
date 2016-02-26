@@ -1,0 +1,223 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1BDFDD9C1C8058570002864E /* SmallJSONParser.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BDFDD9A1C8058570002864E /* SmallJSONParser.c */; };
+		1BDFDD9E1C8058670002864E /* Test.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BDFDD9D1C8058670002864E /* Test.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1B0150771732D2C200304635 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1B0150791732D2C200304635 /* SkyTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SkyTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BDFDD9A1C8058570002864E /* SmallJSONParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SmallJSONParser.c; sourceTree = "<group>"; };
+		1BDFDD9B1C8058570002864E /* SmallJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallJSONParser.h; sourceTree = "<group>"; };
+		1BDFDD9D1C8058670002864E /* Test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Test.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1B0150761732D2C200304635 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1B0150701732D2C200304635 = {
+			isa = PBXGroup;
+			children = (
+				1BDFDD9D1C8058670002864E /* Test.c */,
+				1BDFDD9A1C8058570002864E /* SmallJSONParser.c */,
+				1BDFDD9B1C8058570002864E /* SmallJSONParser.h */,
+				1B01507A1732D2C200304635 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1B01507A1732D2C200304635 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1B0150791732D2C200304635 /* SkyTest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1B0150781732D2C200304635 /* SkyTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SkyTest" */;
+			buildPhases = (
+				1B0150751732D2C200304635 /* Sources */,
+				1B0150761732D2C200304635 /* Frameworks */,
+				1B0150771732D2C200304635 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SkyTest;
+			productName = Visualizer;
+			productReference = 1B0150791732D2C200304635 /* SkyTest */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1B0150711732D2C200304635 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Dag Ågren";
+			};
+			buildConfigurationList = 1B0150741732D2C200304635 /* Build configuration list for PBXProject "SkyTest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1B0150701732D2C200304635;
+			productRefGroup = 1B01507A1732D2C200304635 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1B0150781732D2C200304635 /* SkyTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1B0150751732D2C200304635 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BDFDD9C1C8058570002864E /* SmallJSONParser.c in Sources */,
+				1BDFDD9E1C8058670002864E /* Test.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1B0150801732D2C200304635 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1B0150811732D2C200304635 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1B0150831732D2C200304635 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				HEADER_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "-DPremultipliedBGRA32Pixels";
+				PRODUCT_NAME = SkyTest;
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		1B0150841732D2C200304635 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
+				HEADER_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "-DPremultipliedBGRA32Pixels";
+				PRODUCT_NAME = SkyTest;
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1B0150741732D2C200304635 /* Build configuration list for PBXProject "SkyTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B0150801732D2C200304635 /* Debug */,
+				1B0150811732D2C200304635 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SkyTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B0150831732D2C200304635 /* Debug */,
+				1B0150841732D2C200304635 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1B0150711732D2C200304635 /* Project object */;
+}
