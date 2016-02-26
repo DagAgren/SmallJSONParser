@@ -56,7 +56,7 @@ JSONToken NextJSONToken(JSONParser *self)
 						return token;
 
 					case ']':
-						token.typeandflags=StartArrayJSONToken;
+						token.typeandflags=EndArrayJSONToken;
 						token.start=self->currentbyte-1;
 						token.end=self->currentbyte;
 						return token;
@@ -210,3 +210,87 @@ JSONToken NextJSONTokenWithProvider(JSONParser *self,JSONProvider *provider)
 	};
 }
 
+
+
+
+static bool ParseBraces(JSONParser *self,JSONProvider *provider,int level);
+
+bool ExpectJSONTokenOfTypeWithProvider(JSONParser *self,JSONProvider *provider,int expectedtype,JSONToken *token)
+{
+	if(provider) *token=NextJSONTokenWithProvider(self,provider);
+	else *token=NextJSONToken(self);
+
+	return JSONTokenType(*token)==expectedtype;
+}
+
+bool SkipJSONValueWithProvider(JSONParser *self,JSONProvider *provider)
+{
+	return ParseBraces(self,provider,0);
+}
+
+bool ExpectAndSkipJSONValueOfTypeWithProvider(JSONParser *self,JSONProvider *provider,int expectedtype)
+{
+	JSONToken token;
+	if(provider) token=NextJSONTokenWithProvider(self,provider);
+	else token=NextJSONToken(self);
+
+	int type=JSONTokenType(token);
+	if(type!=expectedtype) return false;
+	else if(type==StartObjectJSONToken || type==StartArrayJSONToken) return ParseBraces(self,provider,1);
+	else return true;
+}
+
+bool SkipUntilEndOfJSONObjectWithProvider(JSONParser *self,JSONProvider *provider)
+{
+	return ParseBraces(self,provider,1);
+}
+
+bool SkipUntilEndOfJSONArrayWithProvider(JSONParser *self,JSONProvider *provider)
+{
+	return ParseBraces(self,provider,1);
+}
+
+bool ExpectAndScanJSONObjectForKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key)
+{
+	JSONToken token;
+	if(!ExpectJSONTokenOfTypeWithProvider(self,provider,StartObjectJSONToken,&token)) return false;
+
+	size_t keylength=strlen(key);
+	for(;;)
+	{
+		if(!ExpectJSONTokenOfTypeWithProvider(self,provider,StringObjectJSONToken,&token)) return false;
+
+		size_t testlength=token.end-token.start;
+		if(testlength>keylength) testlength=keylength;
+		if(memcmp(token.start,key,testlength)==0) return true;
+
+		if(!SkipJSONValueWithProvider(self,provider)) return false;
+	}
+}
+
+static bool ParseBraces(JSONParser *self,JSONProvider *provider,int level)
+{
+	for(;;)
+	{
+		JSONToken token;
+		if(provider) token=NextJSONTokenWithProvider(self,provider);
+		else token=NextJSONToken(self);
+
+		int type=JSONTokenType(token);
+		if(type==StartObjectJSONToken || type==StartArrayJSONToken)
+		{
+			level++;
+		}
+		else if(type==EndObjectJSONToken || type==EndArrayJSONToken)
+		{
+			level--;
+			if(level<0) return false;
+		}
+		else if(type==OutOfDataJSONToken || type==ParseErrorJSONToken)
+		{
+			return false;
+		}
+
+		if(level==0) return true;
+	}
+}

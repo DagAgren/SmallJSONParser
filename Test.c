@@ -71,4 +71,45 @@ int main()
 	}
 	printf("\n");
 
+	printf("Parse test:\n\n");
+
+	input=json;
+	InitialiseJSONProvider(&annoyingprovider,AnnoyingInputProvider,&input,buffer,sizeof(buffer));
+
+	JSONToken token;
+	if(ExpectAndScanJSONObjectForKeyWithProvider(&parser,&annoyingprovider,"furtherkey"))
+	{
+		printf("Found key.\n");
+
+		if(ExpectJSONTokenOfTypeWithProvider(&parser,&annoyingprovider,StartArrayJSONToken,&token))
+		{
+			printf("Found expected array.\n");
+
+			if(SkipJSONValueWithProvider(&parser,&annoyingprovider))
+			{
+				printf("Skipped value.\n");
+
+				if(ExpectJSONTokenOfTypeWithProvider(&parser,&annoyingprovider,NumberObjectJSONToken,&token))
+				{
+					printf("Found expected number.\n");
+				}
+				else
+				{
+					printf("Failed to find expected number.\n");
+				}
+			}
+			else
+			{
+				printf("Failed to skip value.\n");
+			}
+		}
+		else
+		{
+			printf("Failed to find expected array.\n");
+		}
+	}
+	else
+	{
+		printf("Failed to find key.\n");
+	}
 }
