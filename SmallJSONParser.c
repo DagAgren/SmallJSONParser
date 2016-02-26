@@ -5,6 +5,7 @@
 void InitialiseJSONParser(JSONParser *self)
 {
 	memset(self,0,sizeof(JSONParser));
+	self->partialtokentype=OutOfDataJSONToken;
 }
 
 void ProvideJSONInput(JSONParser *self,const char *bytes,size_t length)
@@ -23,9 +24,10 @@ void ProvideJSONInput(JSONParser *self,const char *bytes,size_t length)
 JSONToken NextJSONToken(JSONParser *self)
 {
 	JSONToken token={
-		.typeandflags=OutOfDataJSONToken,
+		.typeandflags=self->partialtokentype,
 		.start=self->currentbyte,
 	};
+	self->partialtokentype=OutOfDataJSONToken;
 
 	while(self->currentbyte<self->end)
 	{
@@ -156,8 +158,7 @@ JSONToken NextJSONToken(JSONParser *self)
 	return token;
 }
 
-JSONToken NextJSONTokenWithInputProvider(JSONParser *self,char *buffer,size_t buffersize,
-JSONInputProviderCallbackFunction *callback,void *context)
+JSONToken NextJSONTokenWithProvider(JSONParser *self,JSONProvider *provider)
 {
 	size_t bufferposition=0;
 	int flags=0;
@@ -172,27 +173,30 @@ JSONInputProviderCallbackFunction *callback,void *context)
 		// we can just return the token without copying and exit early.
 		if(!IsJSONTokenPartial(token) && bufferposition==0) return token;
 
-		// Otherwise, calculate how much more data we can fit into the
-		// buffer, and set the truncated flag if we can't fit all of it.
-		size_t bytestocopy=token.end-token.start;
-		if(bufferposition+bytestocopy>buffersize)
+		if(JSONTokenType(token)!=OutOfDataJSONToken)
 		{
-			bytestocopy=buffersize-bufferposition;
-			flags|=TruncatedJSONTokenFlag;
+			// Otherwise, calculate how much more data we can fit into the
+			// buffer, and set the truncated flag if we can't fit all of it.
+			size_t bytestocopy=token.end-token.start;
+			if(bufferposition+bytestocopy>provider->buffersize)
+			{
+				bytestocopy=provider->buffersize-bufferposition;
+				flags|=TruncatedJSONTokenFlag;
+			}
+
+			// Copy this fragment into the buffer.
+			memcpy(&provider->buffer[bufferposition],token.start,bytestocopy);
+			bufferposition+=bytestocopy;
+
+			// If this was the last fragment, exit the loop and return the
+			// data we have collected.
+			if(!IsJSONTokenPartial(token)) break;
 		}
 
-		// Copy this fragment into the buffer.
-		memcpy(&buffer[bufferposition],token.start,bytestocopy);
-		bufferposition+=bufferposition;
-
-		// If this was the last fragment, exit the loop and return the
-		// data we have collected.
-		if(!IsJSONTokenPartial(token)) break;
-		
 		// Otherwise, try to fetch more data through the callback. If
 		// it signals no more data is available, set the partial flag,
 		// exit the loop and return as much data as we managed to collect.
-		if(!callback(self,context))
+		if(!provider->callback(self,provider->context))
 		{
 			flags|=PartialJSONTokenFlag;
 			break;
@@ -201,8 +205,8 @@ JSONInputProviderCallbackFunction *callback,void *context)
 
 	return (JSONToken){
 		.typeandflags=JSONTokenType(token)|flags,
-		.start=&buffer[0],
-		.end=&buffer[bufferposition],
+		.start=&provider->buffer[0],
+		.end=&provider->buffer[bufferposition],
 	};
 }
 

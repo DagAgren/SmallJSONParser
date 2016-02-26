@@ -24,7 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1B0150791732D2C200304635 /* SkyTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SkyTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B0150791732D2C200304635 /* SmallJSONParser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SmallJSONParser; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDFDD9A1C8058570002864E /* SmallJSONParser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SmallJSONParser.c; sourceTree = "<group>"; };
 		1BDFDD9B1C8058570002864E /* SmallJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallJSONParser.h; sourceTree = "<group>"; };
 		1BDFDD9D1C8058670002864E /* Test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Test.c; sourceTree = "<group>"; };
@@ -54,7 +54,7 @@
 		1B01507A1732D2C200304635 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1B0150791732D2C200304635 /* SkyTest */,
+				1B0150791732D2C200304635 /* SmallJSONParser */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -62,9 +62,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1B0150781732D2C200304635 /* SkyTest */ = {
+		1B0150781732D2C200304635 /* SmallJSONParser */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SkyTest" */;
+			buildConfigurationList = 1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SmallJSONParser" */;
 			buildPhases = (
 				1B0150751732D2C200304635 /* Sources */,
 				1B0150761732D2C200304635 /* Frameworks */,
@@ -74,9 +74,9 @@
 			);
 			dependencies = (
 			);
-			name = SkyTest;
+			name = SmallJSONParser;
 			productName = Visualizer;
-			productReference = 1B0150791732D2C200304635 /* SkyTest */;
+			productReference = 1B0150791732D2C200304635 /* SmallJSONParser */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -88,7 +88,7 @@
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Dag Ågren";
 			};
-			buildConfigurationList = 1B0150741732D2C200304635 /* Build configuration list for PBXProject "SkyTest" */;
+			buildConfigurationList = 1B0150741732D2C200304635 /* Build configuration list for PBXProject "SmallJSONParser" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -100,7 +100,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1B0150781732D2C200304635 /* SkyTest */,
+				1B0150781732D2C200304635 /* SmallJSONParser */,
 			);
 		};
 /* End PBXProject section */
@@ -180,7 +180,7 @@
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				HEADER_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "-DPremultipliedBGRA32Pixels";
-				PRODUCT_NAME = SkyTest;
+				PRODUCT_NAME = SmallJSONParser;
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -191,7 +191,7 @@
 				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				HEADER_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "-DPremultipliedBGRA32Pixels";
-				PRODUCT_NAME = SkyTest;
+				PRODUCT_NAME = SmallJSONParser;
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -199,7 +199,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1B0150741732D2C200304635 /* Build configuration list for PBXProject "SkyTest" */ = {
+		1B0150741732D2C200304635 /* Build configuration list for PBXProject "SmallJSONParser" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1B0150801732D2C200304635 /* Debug */,
@@ -208,7 +208,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SkyTest" */ = {
+		1B0150821732D2C200304635 /* Build configuration list for PBXNativeTarget "SmallJSONParser" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1B0150831732D2C200304635 /* Debug */,

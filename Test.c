@@ -13,9 +13,9 @@ static bool AnnoyingInputProvider(JSONParser *self,void *context)
 
 int main()
 {
-	static const char *json="{\"key\":\"value\",\"alsokey\":true,\"furtherkey\":[1,2,3]}";
+	static const char *json=" {\"key\":  \"value\",	\"alsokey\":\ntrue,\"furtherkey\":[1,2,3]}  ";
 
-	printf("%s\n",json);
+	printf("%s\n\n",json);
 
 	JSONParser parser;
 	InitialiseJSONParser(&parser);
@@ -36,6 +36,7 @@ int main()
 		[ParseErrorJSONToken]="Parse error",
 	};
 
+	printf("Minimal test:\n\n");
 
 	for(;;)
 	{
@@ -47,13 +48,20 @@ int main()
 
 		if(JSONTokenType(token)==OutOfDataJSONToken || JSONTokenType(token)==ParseErrorJSONToken) break;
 	}
+	printf("\n");
+
+	printf("Provider test:\n\n");
+
+	InitialiseJSONParser(&parser);
 
 	const char *input=json;
+	char buffer[128];
+	JSONProvider annoyingprovider;
+	InitialiseJSONProvider(&annoyingprovider,AnnoyingInputProvider,&input,buffer,sizeof(buffer));
+
 	for(;;)
 	{
-		char buffer[128];
-		JSONToken token=NextJSONTokenWithInputProvider(&parser,
-		buffer,sizeof(buffer),AnnoyingInputProvider,&input);
+		JSONToken token=NextJSONTokenWithProvider(&parser,&annoyingprovider);
 
 		printf("%s: ",tokennames[JSONTokenType(token)]);
 		for(const char *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
@@ -61,5 +69,6 @@ int main()
 
 		if(JSONTokenType(token)==OutOfDataJSONToken || JSONTokenType(token)==ParseErrorJSONToken) break;
 	}
+	printf("\n");
 
 }
