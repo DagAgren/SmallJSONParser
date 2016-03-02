@@ -281,16 +281,61 @@ bool ParseNumberTokenAsDouble(JSONToken token,double *result);
 
 // ### Structure parsing API ###
 //
-// TODO.
+// These functions help when writing code to parse the higher-level structure
+// of the stream of tokens that the token parser outputs. The serve two main
+// functions, encoding the expectations on future output, for instance that
+// the upcoming value token after a key token in a dictionary should be a
+// number, and skipping values that we are not interested in.
+//
+// All functions come in two varieties, one that takes a `JSONProvider` and
+// one that does not. The ones that do not simply leave out this parameter,
+// and the `WithProvider` part of the function name. They are not documented
+// separately, and should just be assumed to exist for each function in this
+// section. It should be noted that they are mainly only useful if the whole
+// JSON data has been provided to the `JSONParser`, as there is no handling
+// of buffer boundaries.
+//
+// Each function returns `bool` signifying success. Normal usage of these
+// functions would be to check the result of each one, and return from the
+// function or goto an error handler if any of them return false.
 //
 // #### Functions ####
 
+// Find the next token from the JSON data being parsed by the `JSONParser`,
+// and check that it is of type `expectedtype`. The token is stored in the
+// location pointed to by `token`.
 bool ExpectJSONTokenOfTypeWithProvider(JSONParser *self,JSONProvider *provider,int expectedtype,JSONToken *token);
+
+// Skip the next JSON value. If it is an object or array, all contained values
+// will be skipped also.
 bool SkipJSONValueWithProvider(JSONParser *self,JSONProvider *provider);
+
+// Find the next token from the JSON data being parsed by the `JSONParser`,
+// check that it is of type `expectedtype`, then skip it. If it is an object or
+// array, all contained values will be skipped also.
 bool ExpectAndSkipJSONValueOfTypeWithProvider(JSONParser *self,JSONProvider *provider,int expectedtype);
+
+// Skip all following JSON values until the end of the current object is
+// reached. Any objects or arrays encountered will also be skipped in full.
 bool SkipUntilEndOfJSONObjectWithProvider(JSONParser *self,JSONProvider *provider);
+
+// Skip all following JSON values until the end of the current object is
+// reached. Any objects or arrays encountered will also be skipped in full.
 bool SkipUntilEndOfJSONArrayWithProvider(JSONParser *self,JSONProvider *provider);
+
+// Skip through the keys and values of a JSON object until a key with value
+// `key` is reached. No expanding of escape codes is done on the keys before
+// comparing. Objects and arrays are skipped in full.
+//
+// This function assumes you have already encountered the `StartObjectJSONToken`
+// token for this array.
 bool SkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key);
+
+// Find the next token from the JSON data being parsed by the `JSONParser`,
+// and check that it is the start of an object. If it is, skip through the keys
+// and values of a JSON object until a key with value `key` is reached. No
+// expanding of escape codes is done on the keys before comparing. Objects
+// and arrays are skipped in full.
 bool ExpectAndSkipUntilJSONObjectKeyWithProvider(JSONParser *self,JSONProvider *provider,const char *key);
 
 static inline bool ExpectJSONTokenOfType(JSONParser *self,int expectedtype,JSONToken *token) { return ExpectJSONTokenOfTypeWithProvider(self,NULL,expectedtype,token); }
