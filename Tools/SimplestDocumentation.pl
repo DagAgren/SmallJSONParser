@@ -40,11 +40,7 @@ while(<INPUT>)
 	{
 		if(m!^\s*$!) # All-whitespace line.
 		{
-			foreach my $line (@codelines) { print OUTPUT "\t$line\n" }
-			print OUTPUT "\n" if(@codelines);
-
-			foreach my $line (@commentlines) { print OUTPUT "$line\n" }
-			print OUTPUT "\n";
+			print_code_block();
 
 			@codelines=();
 			@commentlines=();
@@ -60,10 +56,17 @@ while(<INPUT>)
 	}
 }
 
-if(@commentlines)
+print_code_block() if @commentlines;
+
+sub print_code_block
 {
+	my $codestring=join "\n",@codelines;
+	$codestring=~s/static\s+inline\s+(.*?)\s*\{.*\}/$1;/s;
+	@codelines=split /\n/,$codestring;
+
 	foreach my $line (@codelines) { print OUTPUT "\t$line\n" }
 	print OUTPUT "\n" if(@codelines);
 
 	foreach my $line (@commentlines) { print OUTPUT "$line\n" }
+	print OUTPUT "\n";
 }

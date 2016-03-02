@@ -86,12 +86,12 @@ of the same type, whose `start` and `end` pointers contain only the newly
 available data, not the earlier data. The value will have to be manually
 reconstructed if it is of interest.
 
-	static inline int JSONTokenType(JSONToken token) { return token.typeandflags&~JSONTokenFlagMask; }
+	int JSONTokenType(JSONToken token);
 
 Returns the type of the `JSONToken` `token`. This will be one of the
 `*JSONToken` values.
 
-	static inline bool IsJSONTokenPartial(JSONToken token) { return token.typeandflags&PartialJSONTokenFlag; }
+	bool IsJSONTokenPartial(JSONToken token);
 
 Checks if the `JSONToken` `token` is partial, i.e., if it the token extends
 past the end of the current buffer.
@@ -126,14 +126,8 @@ The function should fetch more data, then call `ProvideJSONInput` on
 `parser`, then return `true`. Alternatively, it should return `false` to
 indicate that there is no more input available.
 
-	static inline void InitialiseJSONProvider(JSONProvider *self,
-	JSONInputProviderCallbackFunction *callback,void *context,void *buffer,size_t buffersize)
-	{
-		self->callback=callback;
-		self->context=context;
-		self->buffer=buffer;
-		self->buffersize=buffersize;
-	}
+	void InitialiseJSONProvider(JSONProvider *self,
+	JSONInputProviderCallbackFunction *callback,void *context,void *buffer,size_t buffersize);
 
 Initialise a `JSONProvider` structure. `JSONParser` is responsible for
 streaming input to a `JSONParser`, by using the function supplied through
@@ -170,7 +164,7 @@ buffer instead of into the actual JSON data.
 If there is not enough space to reassemble the token value, it will be
 flagged as truncated.
 
-	static inline bool IsJSONTokenTruncated(JSONToken token) { return token.typeandflags&TruncatedJSONTokenFlag; }
+	bool IsJSONTokenTruncated(JSONToken token);
 
 Checks if the `JSONToken` `token` is truncated, i.e., if it needed to be
 reassembled by `NextJSONTokenWithProvider()` but there was not enough buffer
