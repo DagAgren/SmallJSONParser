@@ -29,6 +29,7 @@
 		1BDFDD9B1C8058570002864E /* SmallJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallJSONParser.h; sourceTree = "<group>"; };
 		1BDFDD9D1C8058670002864E /* Test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Test.c; sourceTree = "<group>"; };
 		1BDFDE5E1C863E940002864E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1BDFDE5F1C8753C70002864E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +49,7 @@
 				1BDFDD9D1C8058670002864E /* Test.c */,
 				1BDFDD9A1C8058570002864E /* SmallJSONParser.c */,
 				1BDFDD9B1C8058570002864E /* SmallJSONParser.h */,
+				1BDFDE5F1C8753C70002864E /* Makefile */,
 				1BDFDE5E1C863E940002864E /* README.md */,
 				1B01507A1732D2C200304635 /* Products */,
 			);

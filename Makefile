@@ -13,7 +13,7 @@ SOURCE_DIR = .
 BUILD_DIR = Build
 
 .PHONY: all
-all: $(NAME)
+all: $(NAME) README.md
 
 C_FILES =	Test.c \
 			SmallJSONParser.c
@@ -33,6 +33,9 @@ $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 
 $(NAME): $(C_OBJS)
 	$(CC) $(ALL_LDFLAGS) -o $@ $^ $(LIBS)
+
+README.md: Tools/SimplestDocumentation.pl SmallJSONParser.h
+	perl $^ $@
 
 .PHONY: clean
 clean:

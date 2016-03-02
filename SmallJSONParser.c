@@ -177,10 +177,12 @@ JSONToken NextJSONTokenWithProvider(JSONParser *self,JSONProvider *provider)
 		{
 			// Otherwise, calculate how much more data we can fit into the
 			// buffer, and set the truncated flag if we can't fit all of it.
+			// Use the buffer size -1, so that a terminating zero byte can
+			// be added later by the unescaping function.
 			size_t bytestocopy=token.end-token.start;
-			if(bufferposition+bytestocopy>provider->buffersize)
+			if(bufferposition+bytestocopy>provider->buffersize-1)
 			{
-				bytestocopy=provider->buffersize-bufferposition;
+				bytestocopy=provider->buffersize-1-bufferposition;
 				flags|=TruncatedJSONTokenFlag;
 			}
 
@@ -221,7 +223,7 @@ static int HexDigit(uint8_t c)
 	else return -1;
 }
 
-bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,size_t buffersize,char **end)
+bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 {
 	const uint8_t *src=token.start;
 	char *dest=unescapedbuffer;
@@ -283,7 +285,7 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,size_t buffer
 
 bool UnescapeJSONStringTokenInPlace(JSONToken *token)
 {
-	return UnescapeJSONStringToken(*token,(char *)token->start,token->end-token->start,(char **)&token->end);
+	return UnescapeJSONStringToken(*token,(char *)token->start,(char **)&token->end);
 }
 
 bool FastIsJSONStringEqual(JSONToken token,const char *string)
