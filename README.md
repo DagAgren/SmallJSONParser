@@ -303,9 +303,14 @@ and values of a JSON object until a key with value `key` is reached. No
 expanding of escape codes is done on the keys before comparing. Objects
 and arrays are skipped in full.
 
+## Thanks ##
+
+The design of this parser was heavily inspired by js0n by Jeremie Miller: https://github.com/quartzjer/js0n
+
+The basic simplified grammar was stolen quite shamelessly from there.
+
 ## License ##
 
 This code is released into the public domain with no warranties. If that is
 not suitable, it is also available under the
 [CC0 license](http://creativecommons.org/publicdomain/zero/1.0/).
-
