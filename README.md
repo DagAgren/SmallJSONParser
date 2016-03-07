@@ -12,6 +12,10 @@ The application then follows along with the structure, and extracts the data
 it needs as it encounters it. The implementation also includes a set of
 helper functions to make this easier.
 
+The official repository for this project lives at https://bitbucket.org/WAHa_06x36/smalljsonparser.
+
+There is also a git mirror at https://github.com/DagAgren/SmallJSONParser which may or may not be up to date.
+
 ## Simplifications ##
 
 In order to keep code size down, the parser actually parses a simplified JSON
