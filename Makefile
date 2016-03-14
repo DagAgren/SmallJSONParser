@@ -4,7 +4,6 @@ DEFINES =
 
 C_OPTS =	-std=c99 \
 			-g \
-			-O2 \
 			-Werror
 
 LIBS = 
