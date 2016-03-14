@@ -230,15 +230,15 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 
 	while(src<token.end)
 	{
-		uint8_t c=*src++;
-		if(c=='\\')
+		uint8_t c1=*src++;
+		if(c1=='\\')
 		{
 			if(src==token.end) return false;
 
-			uint8_t c=*src++;
-			switch(c)
+			uint8_t c2=*src++;
+			switch(c2)
 			{
-				case '"': case '\\': case '/': *dest++=c; break;
+				case '"': case '\\': case '/': *dest++=c2; break;
 				case 'b': *dest++='\b'; break;
 				case 'f': *dest++='\f'; break;
 				case 'n': *dest++='\n'; break;
@@ -254,6 +254,34 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 
 					int code=(h0<<12)|(h1<<8)|(h2<<4)|h3;
 
+					// If we encounter a high surrogate, look for a pair.
+					if(code>=0xd800 && code<=0xdbff)
+					{
+						// Check if there is enough space for another unicode
+						// escape, and that it starts with \u...
+						if(src+6>token.end && src[0]=='\\' && src[1]=='u')
+						{
+							int h0=HexDigit(src[2]);
+							int h1=HexDigit(src[3]);
+							int h2=HexDigit(src[4]);
+							int h3=HexDigit(src[5]);
+
+							// And is followed by four valid hex digits...
+							if(h0>=0 && h1>=0 && h2>=0 && h3>=0)
+							{
+								// Specifying a low surrogate.
+								int code2=(h0<<12)|(h1<<8)|(h2<<4)|h3;
+								if(code2>=0xdc00 && code2<=0xdfff)
+								{
+									// If so, adjust the code accordingly.
+									code=((code&0x3ff)<<10)+(code2&0x3ff);
+									// And skip the escape code.
+									src+=6;
+								}
+							}
+						}
+					}
+
 					if(code<128)
 					{
 						*dest++=code;
@@ -263,9 +291,16 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 						*dest++=0xc0|(code>>6);
 						*dest++=0x80|(code&0x3f);
 					}
-					else
+					else if(code<65536)
 					{
 						*dest++=0xe0|(code>>12);
+						*dest++=0x80|((code>>6)&0x3f);
+						*dest++=0x80|(code&0x3f);
+					}
+					else
+					{
+						*dest++=0xf0|(code>>18);
+						*dest++=0x80|((code>>12)&0x3f);
 						*dest++=0x80|((code>>6)&0x3f);
 						*dest++=0x80|(code&0x3f);
 					}
@@ -274,7 +309,7 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 		}
 		else
 		{
-			*dest=c;
+			*dest=c1;
 		}
 	}
 
