@@ -13,14 +13,6 @@ static bool AnnoyingInputProvider(JSONParser *self,void *context)
 
 int main()
 {
-	static const char *json=" {\"key\":  \"value\",	\"alsokey\":\ntrue,\"furtherkey\":[1,2,3]}  ";
-
-	printf("%s\n\n",json);
-
-	JSONParser parser;
-	InitialiseJSONParser(&parser);
-	ProvideJSONInput(&parser,json,strlen(json));
-
 	static const char *tokennames[]=
 	{
 		[StringJSONToken]="String",
@@ -36,7 +28,15 @@ int main()
 		[ParseErrorJSONToken]="Parse error",
 	};
 
+	static const char *json=" {\"key\":  \"value\",	\"alsokey\":\ntrue,\"furtherkey\":[1,2,3]}  ";
+
+	printf("%s\n\n",json);
+
 	printf("Minimal test:\n\n");
+
+	JSONParser parser;
+	InitialiseJSONParser(&parser);
+	ProvideJSONInput(&parser,json,strlen(json));
 
 	for(;;)
 	{
@@ -129,4 +129,32 @@ int main()
 	{
 		printf("Failed to find key.\n");
 	}
+	printf("\n");
+
+	printf("Unicode test:\n\n");
+
+	static char surrogatejson[]="\"\\uD83D\\uDD30\"";
+
+	InitialiseJSONParser(&parser);
+	ProvideJSONInput(&parser,surrogatejson,strlen(surrogatejson));
+
+	for(;;)
+	{
+		JSONToken token=NextJSONToken(&parser);
+
+		printf("%s: ",tokennames[JSONTokenType(token)]);
+		if(JSONTokenType(token)==StringJSONToken)
+		{
+			UnescapeJSONStringTokenInPlace(&token);
+			printf("%s\n",token.start);
+		}
+		else
+		{
+			for(const uint8_t *ptr=token.start;ptr<token.end;ptr++) fputc(*ptr,stdout);
+			printf("\n");
+		}
+
+		if(JSONTokenType(token)==OutOfDataJSONToken || JSONTokenType(token)==ParseErrorJSONToken) break;
+	}
+	printf("\n");
 }

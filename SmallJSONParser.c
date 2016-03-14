@@ -259,7 +259,7 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 					{
 						// Check if there is enough space for another unicode
 						// escape, and that it starts with \u...
-						if(src+6>token.end && src[0]=='\\' && src[1]=='u')
+						if(src+6<=token.end && src[0]=='\\' && src[1]=='u')
 						{
 							int h0=HexDigit(src[2]);
 							int h1=HexDigit(src[3]);
@@ -274,7 +274,7 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 								if(code2>=0xdc00 && code2<=0xdfff)
 								{
 									// If so, adjust the code accordingly.
-									code=((code&0x3ff)<<10)+(code2&0x3ff);
+									code=((code&0x3ff)<<10)+(code2&0x3ff)+0x10000;
 									// And skip the escape code.
 									src+=6;
 								}
