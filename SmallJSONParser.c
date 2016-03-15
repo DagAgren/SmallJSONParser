@@ -27,6 +27,8 @@ JSONToken NextJSONToken(JSONParser *self)
 		.typeandflags=self->partialtokentype,
 		.start=self->currentbyte,
 	};
+
+	if(self->currentbyte==self->end) token.typeandflags=OutOfDataJSONToken;
 	self->partialtokentype=OutOfDataJSONToken;
 
 	while(self->currentbyte<self->end)

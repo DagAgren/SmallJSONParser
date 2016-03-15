@@ -11,8 +11,14 @@ int main()
 
 	static const char *testcases[]=
 	{
+		"true",
+		"  false  ",
+		"null",
+		"1",
+		"   3.2   ",
+		"\"string\"",
+		"  \"\\uD83D\\uDD30\"  ",
 		" {\"key\":  \"value\",	\"alsokey\":\ntrue,\"furtherkey\":[1,2,3],\n\"longkey\": \"veryveryveryveryveryverylongstring\"}  ",
-		"\"\\uD83D\\uDD30\"",
 	};
 
 	printf("Minimal test:\n\n");
@@ -54,7 +60,7 @@ int main()
 	InitialiseJSONParser(&parser);
 
 	JSONProvider annoyingprovider;
-	const char *input=testcases[0];
+	const char *input=" {\"key\":  \"value\",	\"alsokey\":\ntrue,\"furtherkey\":[1,2,3],\n\"longkey\": \"veryveryveryveryveryverylongstring\"}  ";
 	char buffer[32];
 	InitialiseJSONProvider(&annoyingprovider,AnnoyingInputProvider,&input,buffer,sizeof(buffer));
 
