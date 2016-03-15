@@ -12,10 +12,6 @@ The application then follows along with the structure, and extracts the data
 it needs as it encounters it. The implementation also includes a set of
 helper functions to make this easier.
 
-The official repository for this project lives at https://bitbucket.org/WAHa_06x36/smalljsonparser.
-
-There is also a git mirror at https://github.com/DagAgren/SmallJSONParser which may or may not be up to date.
-
 ## Simplifications ##
 
 In order to keep code size down, the parser actually parses a simplified JSON
@@ -191,7 +187,18 @@ Unescape a JSON string token `token`, handing both escape codes such as \n
 and \r, and Unicode escapes like \u2619, which are converted to UTF-8. The
 result is stored in `unescapedbuffer`, and terminated with a zero byte.
 This buffer must be at least as long  as the length of the token, plus one
-for the terminating zero byte (`end - start + 1`).
+for the terminating zero byte. You can use
+`SizeOfUnescapingBufferForJSONStringToken()` to calculate this size.
+
+The end of the unescaped string will be written to `end`, if not `NULL`.
+
+	static size_t SizeOfUnescapingBufferForJSONStringToken(JSONToken token)
+	{
+		return token.end-token.start+1;
+	}
+
+The number of bytes needed to unescape the token `token`, including the
+terminating zero byte.
 
 	bool UnescapeJSONStringTokenInPlace(JSONToken *token);
 
@@ -307,14 +314,9 @@ and values of a JSON object until a key with value `key` is reached. No
 expanding of escape codes is done on the keys before comparing. Objects
 and arrays are skipped in full.
 
-## Thanks ##
-
-The design of this parser was heavily inspired by js0n by Jeremie Miller: https://github.com/quartzjer/js0n
-
-The basic simplified grammar was stolen quite shamelessly from there.
-
 ## License ##
 
 This code is released into the public domain with no warranties. If that is
 not suitable, it is also available under the
 [CC0 license](http://creativecommons.org/publicdomain/zero/1.0/).
+
