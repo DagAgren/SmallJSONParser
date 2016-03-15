@@ -309,10 +309,11 @@ bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end)
 		}
 		else
 		{
-			*dest=c1;
+			*dest++=c1;
 		}
 	}
 
+	if(end) *end=dest;
 	*dest=0;
 
 	return true;

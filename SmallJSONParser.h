@@ -234,8 +234,18 @@ static inline bool IsJSONTokenTruncated(JSONToken token) { return token.typeandf
 // and \r, and Unicode escapes like \u2619, which are converted to UTF-8. The
 // result is stored in `unescapedbuffer`, and terminated with a zero byte.
 // This buffer must be at least as long  as the length of the token, plus one
-// for the terminating zero byte (`end - start + 1`).
+// for the terminating zero byte. You can use
+// `SizeOfUnescapingBufferForJSONStringToken()` to calculate this size.
+//
+// The end of the unescaped string will be written to `end`, if not `NULL`.
 bool UnescapeJSONStringToken(JSONToken token,char *unescapedbuffer,char **end);
+
+// The number of bytes needed to unescape the token `token`, including the
+// terminating zero byte.
+static size_t SizeOfUnescapingBufferForJSONStringToken(JSONToken token)
+{
+	return token.end-token.start+1;
+}
 
 // Unescape a JSON string token `token`, handing both escape codes such as \n
 // and \r, and Unicode escapes like \u2619, which are converted to UTF-8. The
